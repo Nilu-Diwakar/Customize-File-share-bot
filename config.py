@@ -1,12 +1,6 @@
-#(©)CodeXBotz
-
-
-
-
 import os
 import logging
 from logging.handlers import RotatingFileHandler
-
 
 
 #Bot token @Botfather
@@ -27,6 +21,11 @@ OWNER_ID = int(os.environ.get("OWNER_ID", ""))
 #Port
 PORT = os.environ.get("PORT", "8080")
 
+# Auto-delete
+"""add time im seconds for waitingwaiting before delete 
+1min=60, 2min=60×2=120, 5min=60×5=300"""
+SECONDS = int(os.getenv("SECONDS", "60"))
+
 #Database 
 DB_URI = os.environ.get("DATABASE_URL", "")
 DB_NAME = os.environ.get("DATABASE_NAME", "filesharexbot")
@@ -34,10 +33,14 @@ DB_NAME = os.environ.get("DATABASE_NAME", "filesharexbot")
 #force sub channel id, if you want enable force sub
 FORCE_SUB_CHANNEL = int(os.environ.get("FORCE_SUB_CHANNEL", "0"))
 
+FORCE_SUB_CHANNEL2 = int(os.environ.get("FORCE_SUB_CHANNEL2", "0"))
+
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
 
 #start message
-START_MSG = os.environ.get("START_MESSAGE", "Hello {first}\n\nI can store private files in Specified Channel and other users can access it from special link.")
+# START_MSG = os.environ.get("START_MESSAGE", "Hello {first}\n\nI can store private files in Specified Channel and other users can access it from special link.")
+
+START_MSG = os.environ.get("START_MESSAGE", "Hello [{}](tg://user?id={})\n\nI can store private files in Specified Channel and other users can access it from special link (NILU-Test).")
 try:
     ADMINS=[]
     for x in (os.environ.get("ADMINS", "").split()):
@@ -49,7 +52,7 @@ except ValueError:
 FORCE_MSG = os.environ.get("FORCE_SUB_MESSAGE", "Hello {first}\n\n<b>You need to join in my Channel/Group to use me\n\nKindly Please join Channel</b>")
 
 #set your Custom Caption here, Keep None for Disable Custom Caption
-CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION", None)
+CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION", "<b>• ʙʏ @Paapi_Caption</b>")
 
 #set True if you want to prevent users from forwarding files from bot
 PROTECT_CONTENT = True if os.environ.get('PROTECT_CONTENT', "False") == "True" else False

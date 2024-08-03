@@ -1,8 +1,3 @@
-#(©)CodeXBotz
-
-
-
-
 import os
 import asyncio
 from pyrogram import Client, filters, __version__
@@ -11,7 +6,7 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, 
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated
 
 from bot import Bot
-from config import ADMINS, FORCE_MSG, START_MSG, CUSTOM_CAPTION, DISABLE_CHANNEL_BUTTON, PROTECT_CONTENT
+from config import ADMINS, FORCE_MSG, START_MSG, CUSTOM_CAPTION, DISABLE_CHANNEL_BUTTON, PROTECT_CONTENT, SECONDS
 from helper_func import subscribed, encode, decode, get_messages
 from database.database import add_user, del_user, full_userbase, present_user
 
@@ -63,9 +58,11 @@ async def start_command(client: Client, message: Message):
             return
         await temp_msg.delete()
 
+        Nilesh = []
         for msg in messages:
 
-            if bool(CUSTOM_CAPTION) & bool(msg.document):
+            # if bool(CUSTOM_CAPTION) & bool(msg.document):
+            if bool(CUSTOM_CAPTION):
                 caption = CUSTOM_CAPTION.format(previouscaption = "" if not msg.caption else msg.caption.html, filename = msg.document.file_name)
             else:
                 caption = "" if not msg.caption else msg.caption.html
@@ -76,13 +73,25 @@ async def start_command(client: Client, message: Message):
                 reply_markup = None
 
             try:
-                await msg.copy(chat_id=message.from_user.id, caption = caption, parse_mode = ParseMode.HTML, reply_markup = reply_markup, protect_content=PROTECT_CONTENT)
+                sent_msg = await msg.copy(chat_id=message.from_user.id, caption = caption, parse_mode = ParseMode.HTML, reply_markup = reply_markup, protect_content=PROTECT_CONTENT)
                 await asyncio.sleep(0.5)
+                Nilesh.append(sent_msg)
             except FloodWait as e:
                 await asyncio.sleep(e.x)
-                await msg.copy(chat_id=message.from_user.id, caption = caption, parse_mode = ParseMode.HTML, reply_markup = reply_markup, protect_content=PROTECT_CONTENT)
+                sent_msg = await msg.copy(chat_id=message.from_user.id, caption = caption, parse_mode = ParseMode.HTML, reply_markup = reply_markup, protect_content=PROTECT_CONTENT)
+                Nilesh.append(sent_msg)
             except:
                 pass
+        k = await message.reply_text("<b>❗️ <u>baka!</u> ❗️</b>\n\n<b>This video / file will be deleted in 10 minutes (Due to copyright issues).\n\n📌 Please forward this video / file to somewhere else and start downloading there.</b>")
+        await asyncio.sleep(SECONDS)
+
+        for data in Codeflix:
+            try:
+                await data.delete()
+                await k.edit_text("<b>Your video / file is successfully deleted !</b>")
+            except:
+                pass
+
         return
     else:
         reply_markup = InlineKeyboardMarkup(
@@ -169,7 +178,7 @@ async def send_text(client: Bot, message: Message):
         deleted = 0
         unsuccessful = 0
         
-        pls_wait = await message.reply("<i>Broadcasting Message.. This will Take Some Time</i>")
+        pls_wait = await message.reply("<i>Broadcasting Processing...</i>")
         for chat_id in query:
             try:
                 await broadcast_msg.copy(chat_id)
